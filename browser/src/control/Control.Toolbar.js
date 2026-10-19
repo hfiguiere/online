@@ -923,6 +923,10 @@ function onWopiProps(e) {
 			evt.preventDefault();
 		});
 	}
+	if (e.HostName === 'SharePoint') {
+		window.L.Params.closeButtonEnabled = true;
+		setupCloseButton(window.app.map);
+	}
 }
 
 function processStateChangedCommand(commandName, state) {
@@ -1261,6 +1265,10 @@ function setupToolbar(e) {
 	map.on('wopiprops', onWopiProps);
 	map.on('commandresult', onCommandResult);
 
+	setupCloseButton(map);
+}
+
+function setupCloseButton(map) {
 	const closebuttonwrapper = Util.getElementOrWarn('closebuttonwrapper');
 	if (map.options.wopi && window.L.Params.closeButtonEnabled && !window.mode.isSmallScreenDevice()) {
 		if (closebuttonwrapper) closebuttonwrapper.style.display = 'flex';
