@@ -995,6 +995,16 @@ function onWopiProps(e) {
 			evt.preventDefault();
 		});
 	}
+	if (e.HostName === 'SharePoint') {
+		let targetUri = global.coolParams.get('sc');
+		if (targetUri) {
+			targetUri = decodeURIComponent(targetUri);
+			window.L.Params.closeButtonEnabled = true;
+			setupCloseButton(window.app.map, () => {
+				window.parent.location.url = targetUri;
+			});
+		}
+	}
 }
 
 function processStateChangedCommand(commandName, state) {
@@ -1339,6 +1349,10 @@ function setupToolbar(e) {
 	map.on('wopiprops', onWopiProps);
 	map.on('commandresult', onCommandResult);
 
+	setupCloseButton(map);
+}
+
+function setupCloseButton(map, action) {
 	const closebuttonwrapper = Util.getElementOrWarn('closebuttonwrapper');
 	if (map.options.wopi && window.L.Params.closeButtonEnabled && !window.mode.isSmallScreenDevice()) {
 		if (closebuttonwrapper) closebuttonwrapper.style.display = 'flex';
@@ -1359,13 +1373,17 @@ function setupToolbar(e) {
 
 	const closebutton = Util.getElementOrWarn('closebutton');
 	if (closebutton) {
-		closebutton.addEventListener('click', function () {
-			let dispatcher = global.app.dispatcher;
-			if (!dispatcher)
-				dispatcher = new app.definitions['dispatcher']('global');
+		if (typeof action == "function") {
+			closebutton.addEventListener('click', action);
+		} else {
+			closebutton.addEventListener('click', function () {
+				let dispatcher = global.app.dispatcher;
+				if (!dispatcher)
+					dispatcher = new app.definitions['dispatcher']('global');
 
-			dispatcher.dispatch('closeapp');
-		});
+				dispatcher.dispatch('closeapp');
+			});
+		}
 	}
 }
 
