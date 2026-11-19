@@ -3486,7 +3486,7 @@ std::string ClientRequestDispatcher::getDiscoveryXML()
         }
         else
         {
-            if (elem->getAttribute("name") == "interactivepreview") {
+            if (elem->getAttribute("name") == "interactivepreview" || elem->getAttribute("name") == "imagepreview") {
                 elem->setAttribute(urlsrc, previewUriValue);
             } else if (elem->getAttribute("name") == "view") {
                 elem->setAttribute(urlsrc, viewUriValue);
